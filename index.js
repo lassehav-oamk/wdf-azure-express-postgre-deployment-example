@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-const { getAllGreetings, createGreeting } = require('./config/database');
+const { getAllGreetings, createGreeting, createTablesIfNotExists } = require('./config/database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -66,6 +66,20 @@ app.post('/greetings', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    // Create tables if they don't exist
+    await createTablesIfNotExists();
+    
+    // Start the Express server
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+// Initialize the server
+startServer();

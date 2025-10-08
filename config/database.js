@@ -40,6 +40,50 @@ function getConnection() {
 }
 
 /**
+ * Create database tables if they don't exist.
+ * This function is called during application startup to ensure the database schema is ready.
+ */
+async function createTablesIfNotExists() {
+  const initPool = new Pool(config);
+  
+  try {
+    // Create Greetings table if it doesn't exist
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS Greetings (
+        Id SERIAL PRIMARY KEY,
+        Text VARCHAR(500) NOT NULL,
+        CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+    
+    await initPool.query(createTableQuery);
+    console.log('Database tables checked/created successfully');
+    
+    // Optionally, insert sample data if table is empty
+    const countResult = await initPool.query('SELECT COUNT(*) FROM Greetings');
+    const count = parseInt(countResult.rows[0].count);
+    
+    if (count === 0) {
+      const insertSampleData = `
+        INSERT INTO Greetings (Text) VALUES
+          ('Hello, World!'),
+          ('Welcome to Azure PostgreSQL!'),
+          ('Good morning!'),
+          ('Have a great day!')
+      `;
+      await initPool.query(insertSampleData);
+      console.log('Sample data inserted into Greetings table');
+    }
+    
+  } catch (error) {
+    console.error('Error creating tables:', error);
+    throw error;
+  } finally {
+    await initPool.end();
+  }
+}
+
+/**
  * Get all greetings from the database, ordered by most recent first.
  */
 async function getAllGreetings() {
@@ -63,5 +107,6 @@ async function createGreeting(text) {
 
 module.exports = {
   getAllGreetings,
-  createGreeting
+  createGreeting,
+  createTablesIfNotExists
 };
