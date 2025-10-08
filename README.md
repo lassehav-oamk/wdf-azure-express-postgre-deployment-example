@@ -9,9 +9,8 @@ A simple Express.js REST API that demonstrates how to connect to Azure PostgreSQ
 
 ## Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js 
 - An Azure account
-- Azure CLI installed (optional but recommended)
 
 ## Local Development Setup
 
@@ -21,7 +20,7 @@ A simple Express.js REST API that demonstrates how to connect to Azure PostgreSQ
 npm install
 ```
 
-### 2. Configure Environment Variables
+### 2. Configure Environment Variables for Local Testing
 
 Create a `.env` file in the root directory by copying the example:
 
@@ -139,52 +138,7 @@ The API will be available at `http://localhost:3000`
    - Click "Save" at the top
    - Click "Continue" to confirm restart
 
-### Step 3: Deploy the Application
-
-#### Option A: Deploy using Azure CLI
-
-1. **Install Azure CLI** (if not already installed)
-   - Download from [https://docs.microsoft.com/cli/azure/install-azure-cli](https://docs.microsoft.com/cli/azure/install-azure-cli)
-
-2. **Login to Azure**
-   ```bash
-   az login
-   ```
-
-3. **Deploy the code**
-   ```bash
-   # Navigate to your project directory
-   cd azure-api-db
-
-   # Create a zip file of your project
-   zip -r deploy.zip . -x "node_modules/*" ".git/*" ".env"
-
-   # Deploy using zip deployment
-   az webapp deploy --resource-group greetings-api-rg --name greetings-api-[yourname] --src-path deploy.zip --type zip
-   ```
-
-#### Option B: Deploy using Git
-
-1. **Configure Deployment Center**
-   - In your App Service, go to "Deployment Center"
-   - Select "Local Git"
-   - Click "Save"
-   - Copy the Git Clone Uri
-
-2. **Get Deployment Credentials**
-   - Click on "Local Git/FTPS credentials"
-   - Note your username and password (or create new ones)
-
-3. **Push Code to Azure**
-   ```bash
-   # Add Azure as a remote
-   git remote add azure <Git Clone Uri>
-
-   # Push to Azure
-   git push azure main
-   ```
-
-#### Option C: Deploy from GitHub
+### Step 3: Deploy from GitHub
 
 1. **Configure Deployment Center**
    - In your App Service, go to "Deployment Center"
@@ -194,23 +148,13 @@ The API will be available at `http://localhost:3000`
 
    Azure will automatically deploy whenever you push to the selected branch.
 
-#### Option D: Deploy using VS Code
-
-1. **Install Azure App Service Extension**
-   - Install the "Azure App Service" extension in VS Code
-
-2. **Deploy**
-   - Right-click on your project folder
-   - Select "Deploy to Web App"
-   - Choose your subscription and App Service
-   - Confirm deployment
 
 ### Step 4: Verify Deployment
 
 1. **Access Your API**
    - Your API will be available at: `https://greetings-api-[yourname].azurewebsites.net`
    - Test the health check: `https://greetings-api-[yourname].azurewebsites.net/`
-   - Test greetings endpoint: `https://greetings-api-[yourname].azurewebsites.net/api/greetings`
+   - Test greetings endpoint: `https://greetings-api-[yourname].azurewebsites.net/greetings`
 
 2. **Check Logs**
    - In App Service, go to "Log stream" to see real-time logs
@@ -224,7 +168,7 @@ The API will be available at `http://localhost:3000`
 ### Get All Greetings
 
 ```bash
-curl https://your-app.azurewebsites.net/api/greetings
+curl https://your-app.azurewebsites.net/greetings
 ```
 
 Response:
